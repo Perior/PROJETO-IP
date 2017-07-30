@@ -6,7 +6,7 @@
 
 #define TAMANHO_VETOR 10
 
-// Criação das Structs
+// CriaÃ§Ã£o das Structs
 typedef struct objeto_Motorista{
     char nome[20];
     char empresa[20];
@@ -27,10 +27,10 @@ typedef struct objeto_Onibus{
     int hora_Trajeto;
 }Onibus;
 
-// Essa variável vai ser usada depois pra teste (ja que ainda nao usamos arquivos/alocação)
+// Essa variÃ¡vel vai ser usada depois pra teste (ja que ainda nao usamos arquivos/alocaÃ§Ã£o)
 int quantidade_usuarios;
 
-// Criação dos vetores dos seus determinados tipos de Tamanho 10
+// CriaÃ§Ã£o dos vetores dos seus determinados tipos de Tamanho 10
 Motorista motorista[TAMANHO_VETOR];
 Cobrador cobrador[TAMANHO_VETOR];
 Onibus bus[TAMANHO_VETOR];
@@ -62,7 +62,7 @@ Cobrador infoCobrador(){
 Onibus infoOnibus(){
 }
 
-// SubMenu referente a opção Motorista.
+// SubMenu referente a opÃ§Ã£o Motorista.
 // Acho que da pra entender de boas.
 void menuMotorista(){
     do{
@@ -104,7 +104,7 @@ void menuMotorista(){
     }while(0);
 }
 
-// SubMenu referente a opção Cobrador.
+// SubMenu referente a opÃ§Ã£o Cobrador.
 void menuCobrador(){
     do{
         printf("Digite uma das opcoes a seguir.\n");
@@ -145,7 +145,7 @@ void menuCobrador(){
     }while(0);
 }
 
-// SubMenu referente a opção Onibus
+// SubMenu referente a opÃ§Ã£o Onibus
 void menuOnibus(){
     do{
         printf("Digite uma das opcoes a seguir.\n");
@@ -175,7 +175,7 @@ void menuOnibus(){
             case 3:
                 system("cls");
                 printf("Digite a que Linha deseja adicionar Onibus.");
-                //"quantos?" deve ficar na função abaixo.
+                //"quantos?" deve ficar na funÃ§Ã£o abaixo.
                 implementaOnibus();
                 break;
 
@@ -201,8 +201,8 @@ void menuOnibus(){
     }while(0);
 }
 
-// SubMenu da opção Configurações (ainda vou pensar em como fazer, mas se quiser ir fazendo...
-// São 3 opções aqui: Alterar Usuario/Senha; Limpar Dados; Voltar;
+// SubMenu da opÃ§Ã£o ConfiguraÃ§Ãµes (ainda vou pensar em como fazer, mas se quiser ir fazendo...
+// SÃ£o 3 opÃ§Ãµes aqui: Alterar Usuario/Senha; Limpar Dados; Voltar;
 // Limpar Dados vai excluir tudo do arquivo; Voltar volta KEK; Usuario e Senha vai ser ToOoOP
 void menuConfig(){
 }
@@ -213,7 +213,7 @@ int main()
     setlocale(LC_ALL, "portuguese");
     int sair=0;
     do{
-        printf("Digite a opçao que deseja alterar.\n");
+        printf("Digite a opÃ§ao que deseja alterar.\n");
         printf("1 - MOTORISTAS\n");
         printf("2 - COBRADORES\n");
         printf("3 - ONIBUS\n");
