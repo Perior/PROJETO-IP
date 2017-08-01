@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <locale.h>
+#include <conio.h>
 
 #define TAMANHO_VETOR 10
 
@@ -13,27 +13,39 @@ typedef struct objeto_Motorista{
     int dispon;
 }Motorista;
 
+
 typedef struct objeto_Cobrador{
     char nome[20];
     char empresa[20];
     int dispon;
 }Cobrador;
 
+
 typedef struct objeto_Onibus{
     char linha[30];
     char empresa[20];
     int num_Linha;
     int quant;
-    int hora_Trajeto;
+    int tempo_viagem;
 }Onibus;
 
-// Essa variável vai ser usada depois pra teste (ja que ainda nao usamos arquivos/alocação)
-int quantidade_usuarios;
+typedef struct objeto_Tempo{
+    int hora;
+    int minuto;
+}Tempo;
+
+
+// Essas variáveis vao ser usadas depois pra teste (ja que ainda nao usamos arquivos/alocação)
+int quantidade_motoristas;
+int quantidade_cobradores;
+int quantidade_onibus;
 
 // Criação dos vetores dos seus determinados tipos de Tamanho 10
 Motorista motorista[TAMANHO_VETOR];
 Cobrador cobrador[TAMANHO_VETOR];
-Onibus bus[TAMANHO_VETOR];
+Onibus onibus[TAMANHO_VETOR];
+
+
 /*
     WTFFFFF AAAAAA DEPOIS USO ISSO COROI
 int DEBUG_MODE = 1;
@@ -52,15 +64,105 @@ void imprimeInformacoesDebug(){
 }
 */
 
-// Fazer
+
+void leituraString(char string[], int quant_caracteres){
+    fgets(string, quant_caracteres, stdin);
+}
+
 Motorista infoMotorista(){
+    Motorista mot;
+
+    printf("\n\t\tNome: ");
+    leituraString(mot.nome, 20);
+    printf("\t\tEmpresa: ");
+    leituraString(mot.empresa, 20);
+
+    return mot;
 }
 
 Cobrador infoCobrador(){
+    Cobrador cob;
+
+    printf("\n\t\tNome: ");
+    leituraString(cob.nome, 20);
+    printf("\t\tEmpresa: ");
+    leituraString(cob.empresa, 20);
+
+    return cob;
+}
+
+int conversorTempo(int hora, int minuto){
+    hora*=60;
+    minuto+=hora;
+    return minuto;
+}
+
+Tempo desconversorTempo(int minuto){
+    Tempo temp;
+    temp.hora=minuto/60;
+    temp.minuto=minuto-(temp.hora*60);
+    return temp;
 }
 
 Onibus infoOnibus(){
+    Onibus bus;
+    int hora, minuto;
+
+
+    printf("\n\t\tNome da Linha: ");
+    leituraString(bus.linha, 30);
+    printf("\n\t\tNumero da Linha: ");
+    scanf("%d%*c", &bus.num_Linha);
+    printf("\n\t\tEmpresa do Onibus: ");
+    leituraString(bus.empresa, 20);
+    printf("\t\tQuantidade de Onibus dessa Linha: ");
+    scanf("%d%*c", &bus.quant);
+    printf("\n\t\tTempo Medio de Viagem (formato hh:mm): ");
+    scanf("%02d:%02d%*c", &hora, &minuto);
+
+    bus.tempo_viagem = conversorTempo(hora, minuto);
+
+    return bus;
 }
+
+void listarMotorista(){
+    int i;
+    for(i=0; i<quantidade_motoristas; i++){
+        printf("============================\n");
+        printf("(%d)\n", i+1);
+        printf("Empresa: %s\n", motorista[i].empresa);
+        printf("Nome: %s\n", motorista[i].nome);
+
+    }
+}
+
+void listarCobrador(){
+    int i;
+    for(i=0; i<quantidade_cobradores; i++){
+        printf("============================\n");
+        printf("(%d)\n", i+1);
+        printf("Empresa: %s\n", cobrador[i].empresa);
+        printf("Nome: %s\n", cobrador[i].nome);
+
+    }
+}
+
+void listarOnibus(){
+    int i;
+    Onibus bus;
+    for(i=0; i<quantidade_onibus; i++){
+        printf("============================\n");
+        printf("(%d)\n", i+1);
+        printf("| Empresa: %s |\t", onibus[i].empresa);
+        printf("| Num: %d |\t", onibus[i].num_Linha);
+        printf("| Nome: %s |\t", onibus[i].linha);
+        printf("| Quant: %d |\t", onibus[i].quant);
+        printf("| Viagem: %02d:%02d |\n", desconversorTempo(onibus[i].tempo_viagem));
+
+    }
+}
+
+
 
 // SubMenu referente a opção Motorista.
 // Acho que da pra entender de boas.
@@ -207,10 +309,9 @@ void menuOnibus(){
 void menuConfig(){
 }
 
-//Chupa bebe
+
 int main()
 {
-    setlocale(LC_ALL, "portuguese");
     int sair=0;
     do{
         printf("Digite a opçao que deseja alterar.\n");
