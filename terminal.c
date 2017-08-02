@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <conio.h>
+
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_ENTER 13
 
 #define TAMANHO_VETOR 10
 
@@ -64,11 +67,29 @@ void imprimeInformacoesDebug(){
 }
 */
 
-
+//Isso aqui é autoexplicativo. Mas vê a questão do caracter \n se realmente vai interferir.
 void leituraString(char string[], int quant_caracteres){
     fgets(string, quant_caracteres, stdin);
 }
 
+
+//Funçoes para converter hora:minuto em minuto e vice-versa. Vou utilizar minuto pra fazer os calculos futuros.
+//Mas temos que mostrar o tempo no formato HH:MM para o usuario do programa, por isso o "desconversor".
+int conversorTempo(int hora, int minuto){
+    hora*=60;
+    minuto+=hora;
+    return minuto;
+}
+
+Tempo desconversorTempo(int minuto){
+    Tempo temp;
+    temp.hora=minuto/60;
+    temp.minuto=minuto-(temp.hora*60);
+    return temp;
+}
+
+
+//Funçoes que vao pedir as informaçoes dos usuarios a serem adicionados. É a entrada da função de adicionarX.
 Motorista infoMotorista(){
     Motorista mot;
 
@@ -89,19 +110,6 @@ Cobrador infoCobrador(){
     leituraString(cob.empresa, 20);
 
     return cob;
-}
-
-int conversorTempo(int hora, int minuto){
-    hora*=60;
-    minuto+=hora;
-    return minuto;
-}
-
-Tempo desconversorTempo(int minuto){
-    Tempo temp;
-    temp.hora=minuto/60;
-    temp.minuto=minuto-(temp.hora*60);
-    return temp;
 }
 
 Onibus infoOnibus(){
@@ -125,9 +133,14 @@ Onibus infoOnibus(){
     return bus;
 }
 
+//Também, autoexplicativo, essas funções irão listar (se ja cadastrados) os usuarios.
 void listarMotorista(){
     int i;
     for(i=0; i<quantidade_motoristas; i++){
+        if(quantidade_motoristas == 0){
+            printf("Nenhum motorista cadastrado ainda.\n");
+            break;
+        }
         printf("============================\n");
         printf("(%d)\n", i+1);
         printf("Empresa: %s\n", motorista[i].empresa);
@@ -139,6 +152,10 @@ void listarMotorista(){
 void listarCobrador(){
     int i;
     for(i=0; i<quantidade_cobradores; i++){
+        if(quantidade_cobradores == 0){
+            printf("Nenhum cobrador cadastrado ainda.\n");
+            break;
+        }
         printf("============================\n");
         printf("(%d)\n", i+1);
         printf("Empresa: %s\n", cobrador[i].empresa);
@@ -151,6 +168,10 @@ void listarOnibus(){
     int i;
     Onibus bus;
     for(i=0; i<quantidade_onibus; i++){
+        if(quantidade_onibus == 0){
+            printf("Nenhum onibus cadastrado ainda.\n");
+            break;
+        }
         printf("============================\n");
         printf("(%d)\n", i+1);
         printf("| Empresa: %s |\t", onibus[i].empresa);
@@ -162,23 +183,93 @@ void listarOnibus(){
     }
 }
 
+//Funções de adição de usuarios. Terão como entrada a função infoX.
+void adicionarMotorista(Motorista mot){
+    if(quantidade_motoristas == TAMANHO_VETOR){
+        printf("Não é possível adicionar mais motoristas(ate alocacao rs)\n");
+        return;
+    }
+
+    motorista[quantidade_motoristas] = mot;
+
+    quantidade_motoristas++;
+}
+
+void adicionarCobrador(Cobrador cob){
+    if(quantidade_cobradores == TAMANHO_VETOR){
+        printf("Não é possível adicionar mais cobradores(ate alocacao rs)\n");
+        return;
+    }
+
+    cobrador[quantidade_cobradores] = cob;
+
+    quantidade_cobradores++;
+}
+
+void adicionarOnibus(Onibus bus){
+    if(quantidade_onibus == TAMANHO_VETOR){
+        printf("Não é possível adicionar mais onibus(ate alocacao rs)\n");
+        return;
+    }
+
+    onibus[quantidade_onibus] = bus;
+
+    quantidade_onibus++;
+}
 
 
-// SubMenu referente a opção Motorista.
-// Acho que da pra entender de boas.
+//KKKK Mudei tudoor!!11
+//Agora da pra usar setinha pra mexer nos menus. #PAZ
+
+//Submenu referente a opção Motorista.
 void menuMotorista(){
+
+    int i;
+    int key = 0;
+    int tecla = 0;
+    int atualiza = 0;
+    char vetor[5] = {'>',' ',' ',' ',' '};
+
+
     do{
-        printf("Digite uma das opcoes a seguir.\n");
-        printf("1 - Listar Motoristas\n");
-        printf("2 - Adicionar Motoristas\n");
-        printf("3 - Alterar Motoristas\n");
-        printf("4 - Remover Motoristas\n");
-        printf("5 - Voltar\n\n");
+        system("cls");
+        printf("Escolha uma das opcoes a seguir e aperte Enter para confirmar.\n");
+        for(i=atualiza; i<5; i++){
+            if(key == KEY_DOWN){
+                if(vetor[i+1] == ' '){
+                    vetor[i]=' ';
+                    vetor[i+1]='>';
+                    atualiza++;
+                    break;
+                }
+            }
+            if(key == KEY_UP){
+                if(vetor[i-1] == ' ' && atualiza > 0){
+                    vetor[i] = ' ';
+                    vetor[i-1] = '>';
+                    atualiza--;
+                    break;
+                }
+            }
+        }
 
-        int opc;
-        scanf("%d%*c", &opc);
+        printf("%c Listar Motoristas\n", vetor[0]);
+        printf("%c Adicionar Motoristas\n", vetor[1]);
+        printf("%c Alterar Motoristas\n", vetor[2]);
+        printf("%c Remover Motoristas\n", vetor[3]);
+        printf("%c Voltar\n\n", vetor[4]);
 
-        switch(opc){
+        key = getch();
+
+        if(key == KEY_ENTER){
+            for(i=0; i<5; i++){
+                if(vetor[i]=='>'){
+                    tecla=i+1;
+                }
+            }
+        }
+
+        switch(tecla){
             case 1:
                 system("cls");
                 listarMotorista();
@@ -203,23 +294,58 @@ void menuMotorista(){
             case 5:
                 break;
         }
-    }while(0);
+    }while(1);
 }
 
 // SubMenu referente a opção Cobrador.
 void menuCobrador(){
+
+    int i;
+    int key = 0;
+    int tecla = 0;
+    int atualiza = 0;
+    char vetor[5] = {'>',' ',' ',' ',' '};
+
+
     do{
-        printf("Digite uma das opcoes a seguir.\n");
-        printf("1 - Listar Cobradores\n");
-        printf("2 - Adicionar Cobradores\n");
-        printf("3 - Alterar Cobradores\n");
-        printf("4 - Remover Cobradores\n");
-        printf("5 - Voltar\n\n");
+        system("cls");
+        printf("Escolha uma das opcoes a seguir e aperte Enter para confirmar.\n");
+        for(i=atualiza; i<5; i++){
+            if(key == KEY_DOWN){
+                if(vetor[i+1] == ' '){
+                    vetor[i]=' ';
+                    vetor[i+1]='>';
+                    atualiza++;
+                    break;
+                }
+            }
+            if(key == KEY_UP){
+                if(vetor[i-1] == ' ' && atualiza > 0){
+                    vetor[i] = ' ';
+                    vetor[i-1] = '>';
+                    atualiza--;
+                    break;
+                }
+            }
+        }
 
-        int opc;
-        scanf("%d%*c", &opc);
+        printf("%c Listar Cobradores\n", vetor[0]);
+        printf("%c Adicionar Cobradores\n", vetor[1]);
+        printf("%c Alterar Cobradores\n", vetor[2]);
+        printf("%c Remover Cobradores\n", vetor[3]);
+        printf("%c Voltar\n\n", vetor[4]);
 
-        switch(opc){
+        key = getch();
+
+        if(key == KEY_ENTER){
+            for(i=0; i<5; i++){
+                if(vetor[i]=='>'){
+                    tecla=i+1;
+                }
+            }
+        }
+
+        switch(tecla){
             case 1:
                 system("cls");
                 listarCobrador();
@@ -244,25 +370,59 @@ void menuCobrador(){
             case 5:
                 break;
         }
-    }while(0);
+    }while(1);
 }
 
 // SubMenu referente a opção Onibus
 void menuOnibus(){
+    int i;
+    int key = 0;
+    int tecla = 0;
+    int atualiza = 0;
+    char vetor[7] = {'>',' ',' ',' ',' ',' ',' '};
+
+
     do{
-        printf("Digite uma das opcoes a seguir.\n");
-        printf("1 - Listar Linhas\n");
-        printf("2 - Adicionar Nova Linha\n");
-        printf("3 - Adicionar Novo(s) Onibus (Linha ja existente)\n");
-        printf("4 - Alterar Linha\n");
-        printf("5 - Remover Linha do Terminal\n");
-        printf("6 - Remover Onibus de uma Linha\n");
-        printf("7 - Voltar\n\n");
+        system("cls");
+        printf("Escolha uma das opcoes a seguir e aperte Enter para confirmar.\n");
+        for(i=atualiza; i<7; i++){
+            if(key == KEY_DOWN){
+                if(vetor[i+1] == ' '){
+                    vetor[i]=' ';
+                    vetor[i+1]='>';
+                    atualiza++;
+                    break;
+                }
+            }
+            if(key == KEY_UP){
+                if(vetor[i-1] == ' ' && atualiza > 0){
+                    vetor[i] = ' ';
+                    vetor[i-1] = '>';
+                    atualiza--;
+                    break;
+                }
+            }
+        }
 
-        int opc;
-        scanf("%d%*c", &opc);
+        printf("%c Listar Linhas\n", vetor[0]);
+        printf("%c Adicionar Nova Linha\n", vetor[1]);
+        printf("%c Adicionar Novo(s) Onibus (Linha ja existente)\n", vetor[2]);
+        printf("%c Alterar Linha\n", vetor[3]);
+        printf("%c Remover Linha do Terminal\n", vetor[4]);
+        printf("%c Remover Onibus de uma Linha\n", vetor[5]);
+        printf("%c Voltar\n\n", vetor[6]);
 
-        switch(opc){
+        key = getch();
+
+        if(key == KEY_ENTER){
+            for(i=0; i<7; i++){
+                if(vetor[i]=='>'){
+                    tecla=i+1;
+                }
+            }
+        }
+
+        switch(tecla){
             case 1:
                 system("cls");
                 listarOnibus();
@@ -300,18 +460,24 @@ void menuOnibus(){
             case 7:
                 break;
         }
-    }while(0);
+    }while(1);
 }
 
 // SubMenu da opção Configurações (ainda vou pensar em como fazer, mas se quiser ir fazendo...
 // São 3 opções aqui: Alterar Usuario/Senha; Limpar Dados; Voltar;
 // Limpar Dados vai excluir tudo do arquivo; Voltar volta KEK; Usuario e Senha vai ser ToOoOP
+
+//Depois coloco esse menu com controle de direcional...
 void menuConfig(){
 }
 
 
 int main()
 {
+    quantidade_cobradores = 0;
+    quantidade_motoristas = 0;
+    quantidade_onibus = 0;
+
     int sair=0;
     do{
         printf("Digite a opçao que deseja alterar.\n");
