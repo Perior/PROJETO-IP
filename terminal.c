@@ -37,19 +37,17 @@ typedef struct objeto_Tempo{
     int minuto;
 }Tempo;
 
-
 // Essas variáveis vao ser usadas depois pra teste (ja que ainda nao usamos arquivos/alocação)
 int quantidade_motoristas;
 int quantidade_cobradores;
 int quantidade_onibus;
 
-// Criação dos vetores dos seus determinados tipos de Tamanho 10
+// Criação dos vetores dos seus determinados tipos, com Tamanho 10
 Motorista motorista[TAMANHO_VETOR];
 Cobrador cobrador[TAMANHO_VETOR];
 Onibus onibus[TAMANHO_VETOR];
 
-
-//Isso aqui é autoexplicativo.
+//Função de leitura de strings.
 void leituraString(char string[], int quant_caracteres){
     fgets(string, quant_caracteres, stdin);
     if(string != NULL && strlen(string) > 0){
@@ -59,13 +57,14 @@ void leituraString(char string[], int quant_caracteres){
     }
 }
 
+//Função para substituir o uso do system("pause").
 void substPause(){
     printf("\nAperte uma tecla para voltar.");
     getchar();
 }
 
 
-//Funçoes para converter hora:minuto em minuto e vice-versa. Vou utilizar minuto pra fazer os calculos futuros.
+//Funçoes para converter hora:minuto em minuto e vice-versa. Vou utilizar minuto pra fazer cálculos futuros.
 //Mas temos que mostrar o tempo no formato HH:MM para o usuario do programa, por isso o "desconversor".
 int conversorTempo(int hora, int minuto){
     hora*=60;
@@ -81,7 +80,7 @@ Tempo desconversorTempo(int minuto){
 }
 
 
-//Funçoes que vao pedir as informaçoes dos usuarios a serem adicionados. É a entrada da função de adicionarX.
+//Funçoes que vão pedir as informações dos usuários a serem adicionados. É a entrada da função adicionarX.
 Motorista infoMotorista(){
     Motorista mot;
 
@@ -125,7 +124,8 @@ Onibus infoOnibus(){
     return bus;
 }
 
-//Mudou: Essas funções de listar agora vão apenas listar se receberem 0 como entrada ou vão listar com cursor se receberem 1.
+//Funções para listar os dados.
+//Ela recebe um inteiro 0 para apenas listar ou recebe 1 para listar com o caracter '>' para usarmos o cursor.
 int listarMotorista(int n){
     int i;
     int key;
@@ -265,7 +265,7 @@ int listarOnibus(int n){
     }
 }
 
-//Funções de adição de usuarios. Terão como entrada a função infoX.
+//Funções de adição de dados. Terão como entrada a função infoX.
 void adicionarMotorista(Motorista mot){
     if(quantidade_motoristas == TAMANHO_VETOR){
         printf("Não é possível adicionar mais motoristas(ate alocacao rs)\n");
@@ -302,7 +302,7 @@ void adicionarOnibus(Onibus bus){
     quantidade_onibus++;
 }
 
-//Funções de alteração
+//Funções de alteração dos dados.
 
 void alterarMotorista(){
     int i;
@@ -409,7 +409,7 @@ void reorganizaVetorO(int valorVetor){
     }
 }
 
-//Funções de remoção
+//Funções de remoção dos dados inseridos.
 void removerMotorista(){
     int i;
     int num;
@@ -417,8 +417,8 @@ void removerMotorista(){
     num = listarMotorista(1);
 
     if(quantidade_motoristas == 0){
-        printf("Não há motoristas para remover.\n\n");
         substPause();
+        return;
     }
     else{
         for(i=0; i<quantidade_motoristas; i++){
@@ -437,8 +437,8 @@ void removerCobrador(){
     num = listarCobrador(1);
 
     if(quantidade_cobradores == 0){
-        printf("Não há cobradores para remover.\n\n");
         substPause();
+        return;
     }
     else{
         for(i=0; i<quantidade_cobradores; i++){
@@ -457,8 +457,8 @@ void removerOnibus(){
     num = listarOnibus(1);
 
     if(quantidade_onibus == 0){
-        printf("Não há onibus para remover.\n\n");
         substPause();
+        return;
     }
     else{
         for(i=0; i<quantidade_onibus; i++){
@@ -470,7 +470,7 @@ void removerOnibus(){
     }
 }
 
-//Essas duas funções mexem na quantidade de onibus de uma linha. E vou usá-la mais na frente.
+//Essas duas funções alteram a quantidade de ônibus de uma linha apenas. Vou usá-la mais na frente.
 void implementaOnibus(){
     int i;
     int num;
@@ -478,8 +478,8 @@ void implementaOnibus(){
     num = listarOnibus(1);
 
     if(quantidade_onibus == 0){
-        printf("Não há onibus para modificar. Adicione uma nova linha.\n\n");
         substPause();
+        return;
     }
     else{
         for(i=0; i<quantidade_onibus; i++){
@@ -499,8 +499,8 @@ void decrementaOnibus(){
     num = listarOnibus(1);
 
     if(quantidade_onibus == 0){
-        printf("Não há onibus para modificar. Adicione uma nova linha.\n\n");
         substPause();
+        return;
     }
     else{
         for(i=0; i<quantidade_onibus; i++){
@@ -518,8 +518,7 @@ void decrementaOnibus(){
     }
 }
 
-//Agora da pra usar setinha pra mexer nos menus. #PAZ
-//Tem como fazer uma função só de menu que receba como entrada algo que e emita como saida cobrador ou motorista? (simplificar)
+//Submenus: Utiliza-se as arrow keys(setas do teclado) para selecionar uma opção e ENTER para confirmá-la.
 
 //Submenu referente a opção Motorista.
 void menuMotorista(){
@@ -749,7 +748,6 @@ void menuOnibus(){
 
             case 3:
                 system("cls");
-                printf("Digite a que Linha deseja adicionar Onibus.");
                 implementaOnibus();
                 break;
 
@@ -765,7 +763,6 @@ void menuOnibus(){
 
             case 6:
                 system("cls");
-                printf("Digite de qual Linha deseja retirar Onibus.");
                 decrementaOnibus();
                 break;
 
@@ -780,32 +777,31 @@ void menuOnibus(){
     }while(tecla!=7);
 }
 
-// SubMenu da opção Configurações (ainda vou pensar em como fazer, mas se quiser ir fazendo...
+// SubMenu da opção Configurações(irei começar a fazer assim que implementar arquivos).
 // São 3 opções aqui: Alterar Usuario/Senha; Limpar Dados; Voltar;
-// Limpar Dados vai excluir tudo do arquivo; Voltar volta KEK; Usuario e Senha vai ser ToOoOP
+// Limpar Dados vai excluir tudo do arquivo; Voltar; Usuario e Senha;
 
-//Depois coloco esse menu com cursor...
+
 void menuConfig(){
 }
 
-
-int main()
-{
-    quantidade_cobradores = 0;
-    quantidade_motoristas = 0;
-    quantidade_onibus = 0;
+//Falta implementar as arrow keys aqui.
+void mainMenu(){
 
     int sair=0;
+
     do{
-        printf("Digite a opçao que deseja alterar.\n");
-        printf("1 - MOTORISTAS\n");
-        printf("2 - COBRADORES\n");
-        printf("3 - ONIBUS\n");
-        printf("4 - CONFIGURACOES\n");
-        printf("5 - SAIR\n\n");
+        printf("Digite a opçao que deseja alterar.\n\n");
+        printf("\t\t\t\t1 - MOTORISTAS\n");
+        printf("\t\t\t\t2 - COBRADORES\n");
+        printf("\t\t\t\t3 - ONIBUS\n");
+        printf("\t\t\t\t4 - CONFIGURACOES\n");
+        printf("\t\t\t\t5 - SAIR\n\n");
+        printf("\t\t\t==============================================================\n");
 
         int opc;
         scanf("%d%*c", &opc);
+
 
         switch(opc){
             case 1:
@@ -837,4 +833,16 @@ int main()
                 printf("Opcao nao existente//invalida!\n");
         }
     }while(!sair);
+}
+
+int main()
+{
+    quantidade_cobradores = 0;
+    quantidade_motoristas = 0;
+    quantidade_onibus = 0;
+
+    printf("\n\n\n\t\t\t=======================MENU PRINCIPAL========================\n");
+    printf("\n\t\t\t\t\t");
+    mainMenu();
+    
 }
