@@ -9,7 +9,7 @@
 
 #define TAMANHO_VETOR 10
 
-// Criação das Structs
+// CriaÃ§Ã£o das Structs
 typedef struct objeto_Motorista{
     char nome[20];
     char empresa[20];
@@ -37,28 +37,28 @@ typedef struct objeto_Tempo{
     int minuto;
 }Tempo;
 
-// Essas variáveis vao ser usadas depois pra teste (ja que ainda nao usamos arquivos/alocação)
+// Essas variÃ¡veis vao ser usadas depois pra teste (ja que ainda nao usamos arquivos/alocaÃ§Ã£o)
 int quantidade_motoristas;
 int quantidade_cobradores;
 int quantidade_onibus;
 
-// Criação dos vetores dos seus determinados tipos, com Tamanho 10
+// CriaÃ§Ã£o dos vetores dos seus determinados tipos, com Tamanho 10
 Motorista motorista[TAMANHO_VETOR];
 Cobrador cobrador[TAMANHO_VETOR];
 Onibus onibus[TAMANHO_VETOR];
 
 //Mensagem de erro para problemas na abertura do arquivo.
 void errorArquivo(char nome_arquivo[]){
-    printf("\nErro: Não foi possível abrir o arquivo %s\n", nome_arquivo);
+    printf("\nErro: NÃ£o foi possÃ­vel abrir o arquivo %s\n", nome_arquivo);
 }
 
-//Função que lê o que está no arquivo (motorista)
+//FunÃ§Ã£o que lÃª o que estÃ¡ no arquivo.
 void lerArquivo(){
     FILE *arquivo = fopen("terminal.bin", "rb");
 
     if(arquivo!=NULL){
         int aux;
-
+    //Motorista
         aux = (int)fread(&quantidade_motoristas, sizeof(int), 1, arquivo);
         if(aux < 1){
             errorArquivo("terminal.bin");
@@ -72,11 +72,40 @@ void lerArquivo(){
             fclose(arquivo);
             return;
         }
+    //Cobrador
+        aux = (int)fread(&quantidade_cobradores, sizeof(int), 1, arquivo);
+        if(aux < 1){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+
+        aux = (int)fread(cobrador, sizeof(Cobrador), TAMANHO_VETOR, arquivo);
+        if(aux < TAMANHO_VETOR){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+    //Onibus
+        aux = (int)fread(&quantidade_onibus, sizeof(int), 1, arquivo);
+        if(aux < 1){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+
+        aux = (int)fread(onibus, sizeof(Onibus), TAMANHO_VETOR, arquivo);
+        if(aux < TAMANHO_VETOR){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+
         fclose(arquivo);
     }
 }
 
-//Função que escreve as informações no arquivo (motorista).
+//FunÃ§Ã£o que escreve as informaÃ§Ãµes no arquivo.
 void escreveArquivo(){
     FILE *arquivo = fopen("terminal.bin", "wb");
     if(arquivo == NULL){
@@ -85,7 +114,7 @@ void escreveArquivo(){
     }
     else{
         int aux;
-
+    //Motorista
         aux = (int)fwrite(&quantidade_motoristas, sizeof(int), 1, arquivo);
         if(aux < 1){
             errorArquivo("terminal.bin");
@@ -99,11 +128,40 @@ void escreveArquivo(){
             fclose(arquivo);
             return;
         }
+    //Cobrador
+        aux = (int)fwrite(&quantidade_cobradores, sizeof(int), 1, arquivo);
+        if(aux < 1){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+
+        aux = (int)fwrite(cobrador, sizeof(Cobrador), TAMANHO_VETOR, arquivo);
+        if(aux < TAMANHO_VETOR){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+    //Onibus
+        aux = (int)fwrite(&quantidade_onibus, sizeof(int), 1, arquivo);
+        if(aux < 1){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+
+        aux = (int)fwrite(onibus, sizeof(Onibus), TAMANHO_VETOR, arquivo);
+        if(aux < TAMANHO_VETOR){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+
         fclose(arquivo);
     }
 }
 
-//Função de leitura de strings.
+//FunÃ§Ã£o de leitura de strings.
 void leituraString(char string[], int quant_caracteres){
     fgets(string, quant_caracteres, stdin);
     if(string != NULL && strlen(string) > 0){
@@ -113,14 +171,14 @@ void leituraString(char string[], int quant_caracteres){
     }
 }
 
-//Função para substituir o uso do system("pause").
+//FunÃ§Ã£o para substituir o uso do system("pause").
 void substPause(){
     printf("\nAperte uma tecla para voltar.");
     getchar();
 }
 
 
-//Funçoes para converter hora:minuto em minuto e vice-versa. Vou utilizar minuto pra fazer cálculos futuros.
+//FunÃ§oes para converter hora:minuto em minuto e vice-versa. Vou utilizar minuto pra fazer cÃ¡lculos futuros.
 //Mas temos que mostrar o tempo no formato HH:MM para o usuario do programa, por isso o "desconversor".
 int conversorTempo(int hora, int minuto){
     hora*=60;
@@ -136,7 +194,7 @@ Tempo desconversorTempo(int minuto){
 }
 
 
-//Funçoes que vão pedir as informações dos usuários a serem adicionados. É a entrada da função adicionarX.
+//FunÃ§oes que vÃ£o pedir as informaÃ§Ãµes dos usuÃ¡rios a serem adicionados. Ã‰ a entrada da funÃ§Ã£o adicionarX.
 Motorista infoMotorista(){
     Motorista mot;
 
@@ -180,7 +238,7 @@ Onibus infoOnibus(){
     return bus;
 }
 
-//Funções para listar os dados.
+//FunÃ§Ãµes para listar os dados.
 //Ela recebe um inteiro 0 para apenas listar ou recebe 1 para listar com o caracter '>' para usarmos o cursor.
 int listarMotorista(int n){
     int i;
@@ -321,10 +379,10 @@ int listarOnibus(int n){
     }
 }
 
-//Funções de adição de dados. Terão como entrada a função infoX.
+//FunÃ§Ãµes de adiÃ§Ã£o de dados. TerÃ£o como entrada a funÃ§Ã£o infoX.
 void adicionarMotorista(Motorista mot){
     if(quantidade_motoristas == TAMANHO_VETOR){
-        printf("Não é possível adicionar mais motoristas(ate alocacao rs)\n");
+        printf("NÃ£o Ã© possÃ­vel adicionar mais motoristas(ate alocacao rs)\n");
         substPause();
         return;
     }
@@ -336,7 +394,7 @@ void adicionarMotorista(Motorista mot){
 
 void adicionarCobrador(Cobrador cob){
     if(quantidade_cobradores == TAMANHO_VETOR){
-        printf("Não é possível adicionar mais cobradores(ate alocacao rs)\n");
+        printf("NÃ£o Ã© possÃ­vel adicionar mais cobradores(ate alocacao rs)\n");
         substPause();
         return;
     }
@@ -348,7 +406,7 @@ void adicionarCobrador(Cobrador cob){
 
 void adicionarOnibus(Onibus bus){
     if(quantidade_onibus == TAMANHO_VETOR){
-        printf("Não é possível adicionar mais onibus(ate alocacao rs)\n");
+        printf("NÃ£o Ã© possÃ­vel adicionar mais onibus(ate alocacao rs)\n");
         substPause();
         return;
     }
@@ -358,7 +416,7 @@ void adicionarOnibus(Onibus bus){
     quantidade_onibus++;
 }
 
-//Funções de alteração dos dados.
+//FunÃ§Ãµes de alteraÃ§Ã£o dos dados.
 
 void alterarMotorista(){
     int i;
@@ -440,7 +498,7 @@ void alterarOnibus(){
     }
 }
 
-//Funções de reorganização vetorial.
+//FunÃ§Ãµes de reorganizaÃ§Ã£o vetorial.
 void reorganizaVetorM(int valorVetor){
     int i = valorVetor;
     while(i < quantidade_motoristas - 1){
@@ -465,7 +523,7 @@ void reorganizaVetorO(int valorVetor){
     }
 }
 
-//Funções de remoção dos dados inseridos.
+//FunÃ§Ãµes de remoÃ§Ã£o dos dados inseridos.
 void removerMotorista(){
     int i;
     int num;
@@ -526,7 +584,7 @@ void removerOnibus(){
     }
 }
 
-//Essas duas funções alteram a quantidade de ônibus de uma linha apenas. Vou usá-la mais na frente.
+//Essas duas funÃ§Ãµes alteram a quantidade de Ã´nibus de uma linha apenas. Vou usÃ¡-la mais na frente.
 void implementaOnibus(){
     int i;
     int num;
@@ -574,9 +632,9 @@ void decrementaOnibus(){
     }
 }
 
-//Submenus: Utiliza-se as arrow keys(setas do teclado) para selecionar uma opção e ENTER para confirmá-la.
+//Submenus: Utiliza-se as arrow keys(setas do teclado) para selecionar uma opÃ§Ã£o e ENTER para confirmÃ¡-la.
 
-//Submenu referente a opção Motorista.
+//Submenu referente a opÃ§Ã£o Motorista.
 void menuMotorista(){
 
     int i;
@@ -661,7 +719,7 @@ void menuMotorista(){
     }while(tecla!=5);
 }
 
-// SubMenu referente a opção Cobrador.
+// SubMenu referente a opÃ§Ã£o Cobrador.
 void menuCobrador(){
 
     int i;
@@ -720,16 +778,19 @@ void menuCobrador(){
                 system("cls");
                 printf("Digite as informacoes do funcionario a ser inserido: \n");
                 adicionarCobrador(infoCobrador());
+                escreveArquivo();
                 break;
 
             case 3:
                 system("cls");
                 alterarCobrador();
+                escreveArquivo();
                 break;
 
             case 4:
                 system("cls");
                 removerCobrador();
+                escreveArquivo();
                 break;
 
             case 5:
@@ -743,7 +804,7 @@ void menuCobrador(){
     }while(tecla!=5);
 }
 
-// SubMenu referente a opção Onibus
+// SubMenu referente a opÃ§Ã£o Onibus
 void menuOnibus(){
     int i;
     int key = 0;
@@ -803,26 +864,31 @@ void menuOnibus(){
                 system("cls");
                 printf("Digite os dados da Linha a ser adicionada: \n");
                 adicionarOnibus(infoOnibus());
+                escreveArquivo();
                 break;
 
             case 3:
                 system("cls");
                 implementaOnibus();
+                escreveArquivo();
                 break;
 
             case 4:
                 system("cls");
                 alterarOnibus();
+                escreveArquivo();
                 break;
 
             case 5:
                 system("cls");
                 removerOnibus();
+                escreveArquivo();
                 break;
 
             case 6:
                 system("cls");
                 decrementaOnibus();
+                escreveArquivo();
                 break;
 
             case 7:
@@ -836,8 +902,8 @@ void menuOnibus(){
     }while(tecla!=7);
 }
 
-// SubMenu da opção Configurações(irei começar a fazer assim que implementar arquivos).
-// São 3 opções aqui: Alterar Usuario/Senha; Limpar Dados; Voltar;
+// SubMenu da opÃ§Ã£o ConfiguraÃ§Ãµes(irei comeÃ§ar a fazer assim que implementar arquivos).
+// SÃ£o 3 opÃ§Ãµes aqui: Alterar Usuario/Senha; Limpar Dados; Voltar;
 // Limpar Dados vai excluir tudo do arquivo; Voltar; Usuario e Senha;
 
 
@@ -850,7 +916,7 @@ void mainMenu(){
     int sair=0;
 
     do{
-        printf("Digite a opçao que deseja alterar.\n\n");
+        printf("Digite a opÃ§ao que deseja alterar.\n\n");
         printf("\t\t\t\t1 - MOTORISTAS\n");
         printf("\t\t\t\t2 - COBRADORES\n");
         printf("\t\t\t\t3 - ONIBUS\n");
@@ -886,6 +952,7 @@ void mainMenu(){
             case 5:
                 system("cls");
                 sair=1;
+                escreveArquivo();
                 break;
 
             default:
@@ -896,14 +963,10 @@ void mainMenu(){
 
 int main()
 {
-    quantidade_cobradores = 0;
     lerArquivo();
-    quantidade_onibus = 0;
 
     printf("\n\n\n\t\t\t=======================MENU PRINCIPAL========================\n");
     printf("\n\t\t\t\t\t");
     mainMenu();
-
-
 
 }
