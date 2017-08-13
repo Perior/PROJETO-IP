@@ -37,6 +37,11 @@ typedef struct objeto_Tempo{
     int minuto;
 }Tempo;
 
+typedef struct login_Adm{
+    char user[20];
+    char password[20];
+}Login;
+
 // Essas variáveis vao ser usadas depois pra teste (ja que ainda nao usamos arquivos/alocação)
 int quantidade_motoristas;
 int quantidade_cobradores;
@@ -46,6 +51,7 @@ int quantidade_onibus;
 Motorista motorista[TAMANHO_VETOR];
 Cobrador cobrador[TAMANHO_VETOR];
 Onibus onibus[TAMANHO_VETOR];
+Login dados;
 
 //Mensagem de erro para problemas na abertura do arquivo.
 void errorArquivo(char nome_arquivo[]){
@@ -100,8 +106,19 @@ void lerArquivo(){
             fclose(arquivo);
             return;
         }
+    //Login
+        aux = (int)fread(&dados, sizeof(Login), 2, arquivo);
+        if(aux < 2){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
+        telaLogin();
 
         fclose(arquivo);
+    }
+    else{
+        criacaoLogin();
     }
 }
 
@@ -156,6 +173,13 @@ void escreveArquivo(){
             fclose(arquivo);
             return;
         }
+    //Login
+        aux = (int)fwrite(&dados, sizeof(Login), 2, arquivo);
+        if(aux < 2){
+            errorArquivo("terminal.bin");
+            fclose(arquivo);
+            return;
+        }
 
         fclose(arquivo);
     }
@@ -167,6 +191,22 @@ void leituraString(char string[], int quant_caracteres){
     if(string != NULL && strlen(string) > 0){
         if((string[strlen(string) - 1]) == '\n'){
             string[strlen(string) - 1] = '\0';
+        }
+    }
+}
+
+//Função para ler e mascarar a senha de Login.
+void leituraSenha(char string[], int quant_caracteres){
+    int i;
+
+    for(i=0; i<quant_caracteres; i++){
+        string[i] = getch();
+        if(string[i] == KEY_ENTER){
+            string[i] = '\0';
+            break;
+        }
+        else{
+            printf("*");
         }
     }
 }
@@ -632,6 +672,42 @@ void decrementaOnibus(){
     }
 }
 
+//Função que cadastra o Usuario do programa.
+void criacaoLogin(){
+    printf("Bem vindo novo usuario!\n");
+    printf("Crie um login para acessar este programa.\n\n");
+    printf("Usuario: ");
+    leituraString(dados.user, 20);
+    printf("Senha: ");
+    leituraSenha(dados.password, 20);
+
+    printf("\n\n\tCadastro realizado com sucesso!\n\n");
+    escreveArquivo();
+    substPause();
+    system("cls");
+}
+
+//Função que pede ao usuario para Logar.
+void telaLogin(){
+    Login login;
+    while(1){
+        printf("\n\t\t\t\tUsuario: ");
+        leituraString(login.user, 20);
+        printf("\n\t\t\t\tSenha: ");
+        leituraSenha(login.password, 20);
+
+        if(strcmp(login.user, dados.user) == 0 && strcmp(login.password, dados.password) == 0){
+            system("cls");
+            return;
+        }
+        else{
+            printf("\n\n\t\t\t\tUsuario ou Senha errados.");
+            substPause();
+            system("cls");
+        }
+    }
+}
+
 //Submenus: Utiliza-se as arrow keys(setas do teclado) para selecionar uma opção e ENTER para confirmá-la.
 
 //Submenu referente a opção Motorista.
@@ -902,12 +978,74 @@ void menuOnibus(){
     }while(tecla!=7);
 }
 
-// SubMenu da opção Configurações(irei começar a fazer assim que implementar arquivos).
-// São 3 opções aqui: Alterar Usuario/Senha; Limpar Dados; Voltar;
 // Limpar Dados vai excluir tudo do arquivo; Voltar; Usuario e Senha;
 
 
 void menuConfig(){
+    int i;
+    int key = 0;
+    int tecla = 0;
+    int atualiza = 0;
+    char vetor[3] = {'>',' ',' '};
+
+
+    do{
+
+        printf("Escolha uma das opcoes a seguir e aperte Enter para confirmar.\n");
+        for(i=atualiza; i<3; i++){
+            if(key == KEY_DOWN){
+                if(vetor[i+1] == ' '){
+                    vetor[i]=' ';
+                    vetor[i+1]='>';
+                    atualiza++;
+                    break;
+                }
+            }
+            if(key == KEY_UP){
+                if(vetor[i-1] == ' ' && atualiza > 0){
+                    vetor[i] = ' ';
+                    vetor[i-1] = '>';
+                    atualiza--;
+                    break;
+                }
+            }
+        }
+
+        printf("%c Alterar Usuário/Senha\n", vetor[0]);
+        printf("%c Apagar todos os dados.\n", vetor[1]);
+        printf("%c Voltar\n\n", vetor[2]);
+
+        key = getch();
+
+        if(key == KEY_ENTER){
+            for(i=0; i<3; i++){
+                if(vetor[i]=='>'){
+                    tecla=i+1;
+                }
+            }
+        }
+
+        switch(tecla){
+            case 1:
+                system("cls");
+                //aaaaa
+                substPause();
+                break;
+
+            case 2:
+                system("cls");
+                //aaaaaa
+                break;
+
+            case 3:
+                break;
+        }
+        if(tecla!=3){
+            tecla=0;
+        }
+        system("cls");
+
+    }while(tecla!=3);
 }
 
 //Falta implementar as arrow keys aqui.
@@ -969,4 +1107,5 @@ int main()
     printf("\n\t\t\t\t\t");
     mainMenu();
 
+    return 0;
 }
