@@ -749,38 +749,67 @@ int telaLogin(int aux){
 }
 
 void editarLogin(){
-    printf("Confirme seu usuário e senha atual antes de prosseguir.\n\n");
+    printf("\n\n\t\tConfirme seu usuário e senha atual antes de prosseguir.\n\n");
 
     if(telaLogin(1) == 1){
-        printf("Digite um novo usuário e uma nova senha.\n");
-        printf("Usuário: ");
+        printf("\n\n\t\t   ===========================================");
+        printf("\n\t\t     Digite um novo usuário e uma nova senha.");
+        printf("\n\t\t   ===========================================\n\n");
+        printf("\t\t\t   Usuário: ");
         leituraString(dados.user, 20);
-        printf("Senha: ");
+        printf("\t\t\t   Senha: ");
         leituraSenha(dados.password, 20);
 
-        printf("\n\nLogin alterado com sucesso!");
+        printf("\n\n\t\t\t ===============================");
+        printf("\n\t\t\t   Login alterado com sucesso!");
+        printf("\n\t\t\t ===============================");
+        substPause();
     }
     else{
-
         return;
     }
-
-
 }
 
 void limparDadosArquivos(){
-    printf("Confirme seu usuário e senha atual.");
+    printf("\n\n\t\tConfirme seu usuário e senha atual antes de prosseguir.\n\n");
 
     if(telaLogin(1) == 1){
         int aux;
-        printf("Você realmente deseja apagar todos os dados do programa?\n");
+        int key;
+
+        while(key != KEY_ENTER){
+            printf("\n\n\t\t   ==========================================================");
+            printf("\n\t\t    Você realmente deseja apagar todos os dados do programa?\n");
+            printf("\t\t               (O programa será encerrado após.) \n");
+            printf("\t\t   ==========================================================\n");
+            printf("\n\t\t\t\t********");
+            printf("\n\t\t\t\t||%cSIM||", key == KEY_UP&&1 ? '>' : ' ');
+            printf("\n\t\t\t\t********");
+            printf("\n\t\t\t\t\t  ********");
+            printf("\n\t\t\t\t\t  ||%cNÃO||", key == KEY_DOWN ? '>' : ' ');
+            printf("\n\t\t\t\t\t  ********");
+            if(key == KEY_DOWN){
+                aux = 1;
+            }
+            else{
+                aux=0;
+            }
+            key = getch();
+            system("cls");
+        }
+        if(aux == 1){
+            return;
+        }
+
         aux = (int)remove("terminal.bin");
         if(aux != 0){
             errorArquivo("terminal.bin");
             return;
         }
         else{
-            printf("\n\t\tTodos os dados foram apagados.");
+            printf("\n\n\t\t**************************************************\n");
+            printf("\t\t||       Todos os dados foram apagados.         ||\n");
+            printf("\t\t**************************************************\n");
             substPause();
             exit(0);
         }
@@ -1181,6 +1210,10 @@ void mainMenu(){
 
             default:
                 printf("Opcão não existente//inválida!\n");
+                substPause();
+                system("cls");
+
+
         }
     }while(!sair);
 }
